@@ -23,5 +23,10 @@ A Student Grade Tracker Application built using **React Class-Based Components**
 ## 📸 Screenshots
 
 ![student grade tracker](screenshot/screenshot1.png)
+## 🚀 How to Run Locally
 
-vercel: https://student-grade-tracker-react.vercel.app/
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/asyougram-hub/student-grade-tracker-react
+2. vercel:
+   student-grade-tracker-react.vercel.app   
