@@ -1,57 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-class StudentItem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isEditing: false,
-      tempGrade: props.student.grade
-    };
-  }
+function StudentItem({ student, onUpdateGrade, onDelete }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempGrade, setTempGrade] = useState(student.grade);
 
-  toggleEdit = () => {
-    this.setState(prev => ({ isEditing: !prev.isEditing }));
+  useEffect(() => {
+    if (!isEditing) setTempGrade(student.grade);
+  }, [student.grade, isEditing]);
+
+  const saveGrade = () => {
+    onUpdateGrade(student.id, tempGrade);
+    setIsEditing(false);
   };
 
-  saveGrade = () => {
-    this.props.onUpdateGrade(this.props.student.id, this.state.tempGrade);
-    this.setState({ isEditing: false });
-  };
+  const statusClass = student.status === 'Passed' ? 'passed' : 'failed';
 
-  render() {
-    const { student, onDelete } = this.props;
-    const statusClass = student.status === "Passed" ? "passed" : "failed";
-
-    return (
-      <div className={`student-item ${statusClass}`}>
-        <div className="student-info">
-          <h3>{student.name}</h3>
-          {this.state.isEditing ? (
-            <input
-              type="number"
-              value={this.state.tempGrade}
-              onChange={(e) => this.setState({ tempGrade: e.target.value })}
-              min="0"
-              max="100"
-            />
-          ) : (
-            <span className="grade">Grade: {student.grade}</span>
-          )}
-        </div>
-
-        <div className="actions">
-          {this.state.isEditing ? (
-            <button onClick={this.saveGrade} className="save-btn">Save</button>
-          ) : (
-            <button onClick={this.toggleEdit} className="edit-btn">Edit</button>
-          )}
-          <button onClick={() => onDelete(student.id)} className="delete-btn">Delete</button>
-        </div>
-
-        <span className="status">{student.status}</span>
+  return (
+    <article className={`student-item ${statusClass}`}>
+      <div className="student-info">
+        <h3>{student.name}</h3>
+        {isEditing ? (
+          <input type="number" value={tempGrade} onChange={(e) => setTempGrade(e.target.value)} min="0" max="100" aria-label={`${student.name} grade`} />
+        ) : (
+          <span className="grade">Grade: {student.grade}</span>
+        )}
       </div>
-    );
-  }
+      <div className="actions">
+        {isEditing ? (
+          <button type="button" onClick={saveGrade} className="save-btn">Save</button>
+        ) : (
+          <button type="button" onClick={() => setIsEditing(true)} className="edit-btn">Edit</button>
+        )}
+        <button type="button" onClick={() => onDelete(student.id)} className="delete-btn">Delete</button>
+      </div>
+      <span className="status">{student.status}</span>
+    </article>
+  );
 }
 
 export default StudentItem;
